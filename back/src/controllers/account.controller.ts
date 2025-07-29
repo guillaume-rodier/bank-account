@@ -1,8 +1,8 @@
-import type { Account } from '../types/account';
+import type { Account } from '@/types/account';
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import I18nService from '@/services/locale.service';
-import InterestService from '../services/interest.services';
+import InterestService from '@/services/interest.services';
 
 const account: Account = {
   id: uuidv4(),

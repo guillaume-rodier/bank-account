@@ -11,10 +11,6 @@ import {
 import { asyncHandler } from '@/utils/asyncHandler';
 import I18nService from '@/services/locale.service';
 
-beforeAll(() => {
-  console.log('Running AccountController tests');
-});
-
 // Setup of the mocked express app
 const app = express();
 app.use(bodyParser.json());

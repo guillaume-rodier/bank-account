@@ -1,9 +1,5 @@
 import InterestService from '../../src/services/interest.services';
 
-beforeAll(() => {
-  console.log('Running InterestService tests');
-});
-
 // Test suite for interest service
 describe('InterestService', () => {
   describe('applyInterestToAccount', () => {
@@ -21,7 +17,7 @@ describe('InterestService', () => {
 
     it("does not exceed the authorized ceiling", () => {
       const result = InterestService.applyInterestToAccount(1000, 1010, 0.02);
-      expect(result.newBalance).toBe(1010); // au lieu de 1020
+      expect(result.newBalance).toBe(1010);
       expect(result.interestApplied).toBe(10);
     });
 

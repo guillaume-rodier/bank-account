@@ -1,5 +1,6 @@
+import 'module-alias/register';
 import express from 'express';
-import compteRoute from './routes/compte.routes';
+import accountRoute from '@/routes/account.routes';
 import cors from 'cors';
 
 const app = express();
@@ -11,7 +12,7 @@ app.use(cors({
 }));
 
 // Routes
-app.use('/api/account', compteRoute);
+app.use('/api/account', accountRoute);
 
 const PORT = 3001;
 app.listen(PORT, () => {

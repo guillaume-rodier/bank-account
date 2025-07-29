@@ -6,24 +6,24 @@ import path from 'path'
 class I18nService {
   constructor() {
     i18next.use(Backend).init({
-      lng: 'en', // langue par défaut
+      lng: 'en', // default language
       fallbackLng: 'en',
-      preload: ['en'], // à ajuster selon les langues
+      preload: ['en'], // to be adjusted according to the languages
       backend: {
         loadPath: path.join(__dirname, '../locales/{{lng}}.json'),
       },
       interpolation: {
-        escapeValue: false // car Node.js ne nécessite pas d'échappement
+        escapeValue: false // because Node.js does not require escaping
       }
     })
   }
 
-  // Définir la langue courante
+  // Set current language
   setLocale(locale: string) {
     i18next.changeLanguage(locale)
   }
 
-  // Obtenir une traduction
+  // Get a translation
   getTranslations(key: string): string {
     return i18next.t(key)
   }
