@@ -4,7 +4,7 @@ import {
   doDeposit,
   doWithdraw,
   setLimit,
-  applyInterest,
+  doApplyInterest,
 } from '../controllers/compte.controller';
 import { asyncHandler } from '../utils/asyncHandler';
 
@@ -14,6 +14,6 @@ router.get('/', asyncHandler(getAccount));
 router.post('/deposit', asyncHandler(doDeposit));
 router.post('/withdraw', asyncHandler(doWithdraw));
 router.post('/limit', asyncHandler(setLimit));
-router.post('/apply-interest', asyncHandler(applyInterest));
+router.post('/apply-interest', asyncHandler(doApplyInterest));
 
 export default router;
