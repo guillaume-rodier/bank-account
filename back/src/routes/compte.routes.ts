@@ -5,7 +5,7 @@ import {
   doWithdraw,
   setLimit,
   doApplyInterest,
-} from '../controllers/compte.controller';
+} from '@/controllers/account.controller';
 import { asyncHandler } from '../utils/asyncHandler';
 
 const router = Router();

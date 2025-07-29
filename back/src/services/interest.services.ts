@@ -2,8 +2,31 @@ class InterestService {
   constructor() {}
 
   // Method to apply interest to a balance
-  applyInterest(balance: number, interestRate: number): number {
-    return balance + balance * interestRate;
+  applyInterestToAccount(
+    balance: number,
+    authorizedLimit: number | null,
+    interestRate: number
+  ): { newBalance: number; interestApplied: number } {
+    if (balance < 0) {
+      return { newBalance: balance, interestApplied: 0 };
+    }
+
+    let newBalance = balance + balance * interestRate;
+
+    if (
+      authorizedLimit !== null &&
+      authorizedLimit !== undefined &&
+      typeof authorizedLimit === 'number' &&
+      !isNaN(authorizedLimit) &&
+      newBalance > authorizedLimit
+    ) {
+      newBalance = authorizedLimit;
+    }
+
+    return {
+      newBalance,
+      interestApplied: newBalance - balance,
+    };
   }
 
   // Method to check if the current date is the end of the year

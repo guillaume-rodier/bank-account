@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "concurrently \"npm --prefix back start\" \"npm --prefix front run dev\"",
-    "postinstall": "concurrently \"npm --prefix back install\" \"npm --prefix front install\""
+    "postinstall": "concurrently \"npm --prefix back install\" \"npm --prefix front install\"",
+    "test": "concurrently \"npm --prefix back test\""
   },
   "devDependencies": {
     "concurrently": "^9.2.0"

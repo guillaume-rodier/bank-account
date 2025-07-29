@@ -1,7 +1,7 @@
 import type { Account } from '../types/account';
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import I18nService from '../services/locale.service';
+import I18nService from '@/services/locale.service';
 import InterestService from '../services/interest.services';
 
 const account: Account = {
@@ -77,47 +77,37 @@ export const setLimit = async (req: Request, res: Response) => {
 // Apply interest to the account balance if it's the end of the year
 export const doApplyInterest = async (req: Request, res: Response) => {
   const today = new Date();
+  const account: Account = req.body.account;
+  const interestRate = 0.02;
+  const { balance, authorizedLimit } = account;
 
-  // Check if today is the end of the year
+  // Check if today is December 31
   if (!InterestService.isEndOfYear(today)) {
-    return res.json({ message: "Interest not applied. It's not December 31.", updatedBalance: null });
+    return res.json({
+      message: "Interest not applied. It's not December 31.",
+      updatedBalance: null,
+    });
   }
 
-  // Retrieving the account from the query (example)
-  // In practice, we would retrieve this from the database
-  const account: Account = req.body.account;
+  // Validate the account
   if (!account) {
     return res.status(400).json({ message: "Account data is required." });
   }
 
-  const { balance, authorizedLimit } = account;
+  // Apply interest to the account balance
+  const { newBalance, interestApplied } =
+    InterestService.applyInterestToAccount(balance, authorizedLimit, interestRate);
 
-  // If the account is overdrawn, no interest
-  if (balance < 0) {
-    return res.json({ message: "No interest applied because account is overdrawn.", updatedBalance: balance });
-  }
+  // Get the message if interest was applied
+  const message =
+    interestApplied > 0
+      ? `Interest applied: ${interestApplied.toFixed(2)}. New balance: ${newBalance.toFixed(2)}.`
+      : "No interest applied because account is overdrawn.";
 
-  // The interest rate could come from the query or a config
-  const interestRate = 0.02;
-
-  // Calculation of the new balance with interest
-  let newBalance = balance + balance * interestRate;
-
-  // Application of the ceiling, without exceeding
-  if (
-    authorizedLimit !== null &&
-    authorizedLimit !== undefined &&
-    typeof authorizedLimit === 'number' &&
-    !isNaN(authorizedLimit) && newBalance > authorizedLimit
-  ) {
-    newBalance = authorizedLimit;
-  }
-
-  // Difference between old and new balance (actual interest)
-  const interestApplied = newBalance - balance;
-
+  // return the updated account with the message
   return res.json({
-    message: `Interest applied: ${interestApplied.toFixed(2)}. New balance: ${newBalance.toFixed(2)}.`,
-    account
+    message,
+    updatedBalance: newBalance,
+    account,
   });
 };

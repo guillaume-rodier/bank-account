@@ -12,6 +12,10 @@
       "./src/types",
       "./node_modules/@types"
     ],
+    "types": ["jest"],
+    "paths": {
+      "@/*": ["*"]
+    },
 
     /* Emit */
     "outDir": "./dist",                                  /* Specify an output folder for all emitted files. */
@@ -26,6 +30,6 @@
     /* Completeness */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*", "src/types/index.ts"],
+  "include": ["src/**/*", "src/types/index.ts", "tests"],
   "exclude": ["node_modules"]
 }
