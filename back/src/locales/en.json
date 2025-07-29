@@ -1,0 +1,7 @@
+{
+  "amount_positive": "Amount must be a positive number",
+  "overdraft_not_allowed": "Overdraft not allowed",
+  "limit_exceeded": "The limit cannot be exceeded.",
+  "limit_positive": "The limit must be a positive number",
+  "rate_positive": "The rate must be a positive number"
+}
