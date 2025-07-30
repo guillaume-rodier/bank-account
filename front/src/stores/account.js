@@ -60,10 +60,9 @@ export const useAccountStore = defineStore('account', {
       }
     },
 
-    async applyInterest() {
+    async applyInterest(payload) {
       try {
-        const response = await api.post('/api/account/apply-interest', {
-        });
+        const response = await api.post('/api/account/apply-interest', payload);
         await this.fetchAccount();
         return response.data;
       } catch (e) {

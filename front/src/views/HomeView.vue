@@ -1,14 +1,22 @@
 <template>
   <v-container class="mt-8">
-    <v-alert
-      v-if="message"
-      type="info"
-      class="mb-4"
-      dismissible
-      @dismissed="message = null"
+    <v-snackbar
+      v-model="snackbar.visible"
+      :timeout="4000"
+      :color="snackbar.color"
+      location="end top"
     >
-      {{ message }}
-    </v-alert>
+      {{ snackbar.text }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="indigo"
+          @click="closeSnackbar"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <v-row justify="center">
       <v-col cols="12" md="6">
@@ -33,18 +41,18 @@
               v-model.number="depositAmount"
               label="Montant dépôt"
               type="number"
-              min="0"
-              outlined
-              dense
               class="mb-3"
+              variant="solo"
+              min="0"
+              hide-details
             />
 
             <v-btn
               :loading="loading.deposit"
-              color="success"
-              class="mb-4"
-              @click="handleDeposit"
               :disabled="depositAmount <= 0"
+              color="success"
+              class="mb-6"
+              @click="handleDeposit"
             >
               Déposer
             </v-btn>
@@ -53,18 +61,18 @@
               v-model.number="withdrawAmount"
               label="Montant retrait"
               type="number"
-              min="0"
-              outlined
-              dense
               class="mb-3"
+              variant="solo"
+              min="0"
+              hide-details
             />
 
             <v-btn
               :loading="loading.withdraw"
-              color="error"
-              class="mb-4"
-              @click="handleWithdraw"
               :disabled="withdrawAmount <= 0"
+              color="error"
+              class="mb-6"
+              @click="handleWithdraw"
             >
               Retirer
             </v-btn>
@@ -73,18 +81,18 @@
               v-model.number="limitAmount"
               label="Nouvelle limite (0 pour supprimer)"
               type="number"
-              min="0"
-              outlined
-              dense
               class="mb-3"
+              variant="solo"
+              min="0"
+              hide-details
             />
 
             <v-btn
               :loading="loading.limit"
-              color="primary"
-              class="mb-4"
-              @click="handleSetLimit"
               :disabled="limitAmount < 0"
+              color="primary"
+              class="mb-3 mr-2"
+              @click="handleSetLimit"
             >
               Définir la limite
             </v-btn>
@@ -92,6 +100,7 @@
             <v-btn
               :loading="loading.removeLimit"
               color="grey darken-1"
+              class="mb-3 mr-2"
               @click="handleRemoveLimit"
             >
               Retirer la limite de plafond
@@ -119,6 +128,12 @@ import { useAccountStore } from '@/stores/account';
 
 const store = useAccountStore();
 
+const snackbar = reactive({
+  visible: false,
+  text: '',
+  color: 'info',
+});
+
 const loading = reactive({
   deposit: false,
   withdraw: false,
@@ -143,10 +158,14 @@ async function handleDeposit() {
   message.value = null;
   try {
     const response = await store.deposit(depositAmount.value);
-    message.value = response?.message || 'Dépôt effectué avec succès';
+    snackbar.text = response?.message || 'Dépôt effectué avec succès';
+    snackbar.color = 'success';
+    snackbar.visible = true;
     depositAmount.value = 0;
   } catch (e) {
-    message.value = e.response?.data?.message || e.message || 'Erreur lors du dépôt';
+    snackbar.text = e.response?.data?.message || e.message || 'Erreur lors du dépôt';
+    snackbar.color = 'error';
+    snackbar.visible = true;
   } finally {
     loading.deposit = false;
   }
@@ -157,10 +176,14 @@ async function handleWithdraw() {
   message.value = null;
   try {
     const response = await store.withdraw(withdrawAmount.value);
-    message.value = response?.message || 'Retrait effectué avec succès';
+    snackbar.text = response?.message || 'Retrait effectué avec succès';
+    snackbar.color = 'success';
+    snackbar.visible = true;
     withdrawAmount.value = 0;
   } catch (e) {
-    message.value = e.response?.data?.message || e.message || 'Erreur lors du retrait';
+    snackbar.text = e.response?.data?.message || e.message || 'Erreur lors du retrait';
+    snackbar.color = 'error';
+    snackbar.visible = true;
   } finally {
     loading.withdraw = false;
   }
@@ -172,10 +195,14 @@ async function handleSetLimit() {
   try {
     const newLimit = limitAmount.value <= 0 ? null : limitAmount.value;
     const response = await store.setLimit(newLimit);
-    message.value = response?.message || 'Limite mise à jour';
+    snackbar.text = response?.message || 'Limite mise à jour';
+    snackbar.color = 'success';
+    snackbar.visible = true;
     limitAmount.value = 0;
   } catch (e) {
-    message.value = e.response?.data?.message || e.message || 'Erreur lors de la mise à jour de la limite';
+    snackbar.text = e.response?.data?.message || e.message || 'Erreur lors de la mise à jour de la limite';
+    snackbar.color = 'error';
+    snackbar.visible = true;
   } finally {
     loading.limit = false;
   }
@@ -186,9 +213,13 @@ async function handleRemoveLimit() {
   message.value = null;
   try {
     const response = await store.setLimit(null);
-    message.value = response?.message || 'Limite retirée';
+    snackbar.text = response?.message || 'Limite retirée';
+    snackbar.color = 'success';
+    snackbar.visible = true;
   } catch (e) {
-    message.value = e.response?.data?.message || e.message || 'Erreur lors du retrait de la limite';
+    snackbar.text = e.response?.data?.message || e.message || 'Erreur lors du retrait de la limite';
+    snackbar.color = 'error';
+    snackbar.visible = true;
   } finally {
     loading.removeLimit = false;
   }
@@ -198,13 +229,24 @@ async function handleApplyInterest() {
   loading.interest = true;
   message.value = null;
   try {
-    const response = await store.applyInterest();
-    message.value = response?.message || 'Intérêt appliqué';
+    const response = await store.applyInterest({
+      account: store.account,
+      rate: 0.05
+    });
+    snackbar.text = response?.message || 'Intérêt appliqué';
+    snackbar.color = 'success';
+    snackbar.visible = true;
   } catch (e) {
-    message.value = e.response?.data?.message || e.message || "Erreur lors de l'application de l'intérêt";
+    snackbar.text = e.response?.data?.message || e.message || "Erreur lors de l'application de l'intérêt";
+    snackbar.color = 'error';
+    snackbar.visible = true;
   } finally {
     loading.interest = false;
   }
+}
+
+function closeSnackbar() {
+  snackbar.visible = false
 }
 
 onMounted(async () => {

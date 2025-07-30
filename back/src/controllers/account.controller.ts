@@ -78,7 +78,7 @@ export const setLimit = async (req: Request, res: Response) => {
 export const doApplyInterest = async (req: Request, res: Response) => {
   const today = new Date();
   const account: Account = req.body.account;
-  const interestRate = 0.02;
+  const interestRate = req.body.interestRate || 0.02;
   const { balance, authorizedLimit } = account;
 
   // Check if today is December 31
