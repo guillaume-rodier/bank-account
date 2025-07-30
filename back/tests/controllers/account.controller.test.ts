@@ -66,6 +66,7 @@ describe('Account Controller', () => {
     };
 
     const res = await request(app).post('/interest').send({ account: fakeAccount });
+
     expect(res.status).toBe(200);
     expect(res.body.updatedBalance).toBe(1020);
     expect(res.body.message).toContain('Interest applied');
@@ -82,8 +83,48 @@ describe('Account Controller', () => {
     };
 
     const res = await request(app).post('/interest').send({ account: fakeAccount });
+
     expect(res.status).toBe(200);
     expect(res.body.updatedBalance).toBe(null);
     expect(res.body.message).toContain("It's not December 31");
+  });
+
+  it("should not apply interest if account is overdrawn", async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date("2024-12-31T10:00:00Z"));
+
+    const fakeAccount = {
+      balance: -50,
+      authorizedLimit: 2000,
+      authorizedOverdraft: -100,
+    };
+
+    const res = await request(app).post("/interest").send({ account: fakeAccount });
+
+    expect(res.status).toBe(200);
+    expect(res.body.updatedBalance).toBe(-50);
+    expect(res.body.message).toContain("No interest applied");
+
+    jest.useRealTimers();
+  });
+
+  it("should apply interest but cap the balance at the authorized limit", async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date("2024-12-31T10:00:00Z")); // 31 décembre
+
+    const fakeAccount = {
+      balance: 1990,
+      authorizedLimit: 2000, // plafond serré
+      authorizedOverdraft: -100,
+    };
+
+    const res = await request(app).post("/interest").send({ account: fakeAccount });
+
+    expect(res.status).toBe(200);
+    expect(res.body.updatedBalance).toBe(2000); // limité au plafond
+    expect(res.body.message).toContain("Interest applied");
+    expect(res.body.message).toContain("10.00"); // intérêts appliqués
+
+    jest.useRealTimers();
   });
 });

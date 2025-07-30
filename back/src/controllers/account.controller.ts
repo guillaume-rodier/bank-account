@@ -90,7 +90,7 @@ export const doApplyInterest = async (req: Request, res: Response) => {
   }
 
   // Validate the account
-  if (!account) {
+  if (!account || !account.balance || !account.authorizedLimit) {
     return res.status(400).json({ message: "Account data is required." });
   }
 
