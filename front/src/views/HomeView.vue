@@ -29,8 +29,8 @@
               <v-alert type="info" border="start">Aucune donnée reçue.</v-alert>
             </div>
             <div v-else>
-              <p><strong>Solde :</strong> {{ store.account.balance }} €</p>
-              <p><strong>Limite autorisée :</strong> {{ computedLimitAllowed }}</p>
+              <p data-testid="balance"><strong>Solde :</strong> {{ store.account.balance }} €</p>
+              <p data-testid="limit"><strong>Limite autorisée :</strong> {{ computedLimitAllowed }}</p>
             </div>
           </v-card-text>
 
@@ -39,6 +39,7 @@
           <v-card-text>
             <v-text-field
               v-model.number="depositAmount"
+              data-testid="deposit-input"
               label="Montant du dépôt"
               type="number"
               class="mb-3"
@@ -50,6 +51,7 @@
             <v-btn
               :loading="loading.deposit"
               :disabled="depositAmount <= 0"
+              data-testid="deposit-button"
               color="success"
               class="mb-6"
               @click="handleDeposit"
