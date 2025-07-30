@@ -39,7 +39,7 @@
           <v-card-text>
             <v-text-field
               v-model.number="depositAmount"
-              label="Montant dépôt"
+              label="Montant du dépôt"
               type="number"
               class="mb-3"
               variant="solo"
@@ -59,7 +59,7 @@
 
             <v-text-field
               v-model.number="withdrawAmount"
-              label="Montant retrait"
+              label="Montant du retrait"
               type="number"
               class="mb-3"
               variant="solo"

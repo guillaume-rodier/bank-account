@@ -4,7 +4,7 @@
   "scripts": {
     "start": "concurrently \"npm --prefix back start\" \"npm --prefix front run dev\"",
     "postinstall": "concurrently \"npm --prefix back install\" \"npm --prefix front install\"",
-    "test": "concurrently \"npm --prefix back test\""
+    "test": "concurrently \"npm --prefix back test\" \"npm run --prefix front test:unit\""
   },
   "devDependencies": {
     "concurrently": "^9.2.0"
