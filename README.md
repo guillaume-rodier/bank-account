@@ -1,120 +1,142 @@
-# Bank Account Application
+# 💰 Bank Account Application
 
 ## Description
 
-Cette application permet la gestion d’un compte bancaire avec fonctionnalités telles que dépôt, retrait, définition d’un plafond, et application d’intérêts.
-Le projet est organisé en architecture fullstack avec :
+This application allows you to manage a bank account with features such as:
 
-* **Frontend** en Vue.js + Vuetify
-* **Backend** en Node.js + Express + TypeScript
+- Deposits and withdrawals
+- Setting or removing an authorized limit
+- Applying interest
 
-Lancement simplifié via une commande unique qui démarre frontend et backend en parallèle.
+The project is structured as a **fullstack application** with:
+
+- **Frontend**: Vue.js + Vuetify
+- **Backend**: Node.js + Express + TypeScript
+
+Everything is orchestrated from the root with unified commands using [`concurrently`](https://www.npmjs.com/package/concurrently).
 
 ---
 
-## Structure du projet
+## 🗂 Project Structure
 
 ```
+
 bank-account/
 │
-├── backend/              # Backend Node.js (TypeScript)
-│   ├── controllers/      # Contrôleurs Express
-│   ├── routes/           # Définition des routes API
-│   ├── models/           # Modèles de données (si besoin)
-│   ├── server.ts         # Serveur Express principal
-│   └── tsconfig.json     # Configuration TypeScript backend
+├── back/                  # Node.js backend (TypeScript + express)
+│   ├── controllers/       # Express controllers
+│   ├── locales/           # Languages files
+│   ├── routes/            # API route definitions
+│   ├── services/          # Services files
+│   ├── types/             # Types files
+│   ├── utils/             # Utils files
+│   ├── app.ts             # Main Express server
+│   └── tsconfig.json      # Backend TypeScript config
 │
-├── frontend/             # Frontend Vue.js + Vuetify
+├── front/                 # Vue.js + Vuetify frontend
 │   ├── src/
-│   │   ├── components/   # Composants Vue
-│   │   ├── views/        # Pages/Vues
-│   │   ├── router/       # Gestion des routes Vue
-│   │   └── main.ts       # Entrée principale Vue
-│   ├── public/           # Fichiers statiques
-│   └── package.json      # Dépendances frontend
+│   │   ├── api/           # Api config
+│   │   ├── assets/        # Styles and pictures
+│   │   ├── components/    # Vue components
+│   │   ├── plugins/       # Plugins configuration
+│   │   ├── router/        # Vue Router
+│   │   ├── stores/        # Pinia stores
+│   │   ├── views/         # Page views
+│   │   ├── App.vue        # Main file of the app
+│   │   └── main.ts        # Main entry point
+│   ├── public/            # Static files
+│   ├── test/              # Test files
+│   ├── .gitignore/        # Git ignored files
+│   ├── jsconfig.js        # JS config
+│   ├── vite.config.js/    # Vite config
+│   ├── vitest.config.js   # Vitest config
+│   └── package.json       # Frontend dependencies
 │
-├── package.json          # Scripts communs, dépendances dev (concurrently, etc.)
-├── tsconfig.json         # Configuration TS commune (optionnelle)
-└── .gitignore            # Fichiers à ignorer par git
-```
+├── package.json           # Root scripts (start/test/install)
+└── .gitignore             # Git ignored files
+
+````
 
 ---
 
-## Installation
+## 🚀 Getting Started
 
-À la racine du projet, lance la commande pour installer les dépendances du frontend et du backend simultanément :
+From the root directory, install frontend and backend dependencies in parallel:
 
 ```bash
 npm run install
-```
+````
 
-Cette commande utilise [`concurrently`](https://www.npmjs.com/package/concurrently) pour exécuter :
+This runs:
 
-* `npm install` dans le dossier `backend`
-* `npm install` dans le dossier `frontend`
+* `npm install` in `back/`
+* `npm install` in `front/`
 
 ---
 
-## Lancement de l’application
+## 🔧 Running the App
 
-Toujours depuis la racine, lance la commande suivante pour démarrer backend et frontend en parallèle :
+To start both the backend and frontend simultaneously:
 
 ```bash
 npm start
 ```
 
-* Le backend sera accessible sur `http://localhost:3000`
-* Le frontend sur `http://localhost:5173` (port par défaut Vite)
+* Backend: [http://localhost:3000](http://localhost:3000)
+* Frontend: [http://localhost:5173](http://localhost:5173) (default Vite port)
 
 ---
 
-## Commandes utiles
+## 📦 Available Commands
 
-| Commande                 | Description                                             |
-| ------------------------ | ------------------------------------------------------- |
-| `npm run install`        | Installe les dépendances frontend et backend            |
-| `npm start`              | Démarre frontend et backend simultanément               |
-| `npm run backend`        | Démarre uniquement le backend                           |
-| `npm run frontend`       | Démarre uniquement le frontend                          |
-| `npm test`               | Lance les tests backend (à adapter selon configuration) |
-| `npm run build-frontend` | Compile le frontend Vue.js pour la production           |
-| `npm run build-backend`  | Compile le backend TypeScript (si script ajouté)        |
+| Command           | Description                                     |
+| ----------------- | ----------------------------------------------- |
+| `npm run install` | Installs both frontend and backend dependencies |
+| `npm start`       | Starts frontend and backend in parallel         |
+| `npm test`        | Runs backend and frontend tests concurrently    |
+
+> ⚠️ If you want to run frontend or backend independently, go into the respective folders and use their local scripts.
 
 ---
 
-## Tests
+## ✅ Testing
 
-* Les tests backend sont écrits en **Jest** avec TypeScript.
-* Les tests frontend utilisent **Vue Test Utils** et **Jest** (à configurer).
+* **Backend** tests use **Jest** (with TypeScript).
+* **Frontend** tests use **Vitest**, **Vue Test Utils**, and **@testing-library/vue**.
 
-Pour lancer tous les tests backend :
+From the root, run all tests with:
 
 ```bash
-npm run test-backend
+npm test
 ```
 
+This executes:
+
+* Backend tests from `back/`
+* Frontend unit tests from `front/`
+
 ---
 
-## Mise à jour TypeScript
+## 🧪 TypeScript Compilation
 
-Si tu modifies la configuration TS ou ajoutes des fichiers, pense à recompiler le backend (si nécessaire) :
+If you're modifying TypeScript settings or adding new backend files, you may want to manually compile the backend:
 
 ```bash
-cd backend
+cd back
 tsc
 ```
 
 ---
 
-## Remarques
+## 📝 Notes
 
-* Le backend expose une API REST pour gérer les opérations bancaires.
-* Le frontend consomme cette API via Axios (ou fetch) pour afficher et modifier les données du compte.
-* La gestion des erreurs et validations sont faites côté backend et frontend.
-* Le projet utilise **concurrently** pour faciliter la gestion des deux serveurs.
+* The backend exposes a REST API to manage account operations.
+* The frontend uses Axios to consume the API and update UI state.
+* Error handling and validations are implemented on both client and server sides.
+* [`concurrently`](https://www.npmjs.com/package/concurrently) is used for simplified orchestration.
 
 ---
 
-## Contact
+## 📫 Contact
 
-Pour toute question ou amélioration, n’hésite pas à ouvrir une issue ou contacter l’auteur.
+For questions or suggestions, feel free to open an issue or contact the author.
